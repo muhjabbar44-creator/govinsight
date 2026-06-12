@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GovInsight+ — Platform Intelijen Kebijakan Nasional</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── TOKENS ─────────────────────────────────────────── */
+  :root {
+    --navy:       #0B1628;
+    --slate:      #152038;
+    --slate-md:   #1E2D45;
+    --slate-lt:   #2A3F5F;
+    --cyan:       #00D4FF;
+    --cyan-dim:   rgba(0,212,255,0.12);
+    --cyan-glow:  rgba(0,212,255,0.25);
+    --amber:      #F59E0B;
+    --amber-dim:  rgba(245,158,11,0.12);
+    --green:      #10B981;
+    --green-dim:  rgba(16,185,129,0.12);
+    --red:        #EF4444;
+    --red-dim:    rgba(239,68,68,0.12);
+    --muted:      #8B9AB5;
+    --muted-lt:   #B0BFCE;
+    --white:      #F0F4F8;
+    --border:     rgba(139,154,181,0.18);
+    --border-lt:  rgba(0,212,255,0.2);
+    --font-disp:  'Space Grotesk', sans-serif;
+    --font-body:  'DM Sans', sans-serif;
+    --font-mono:  'DM Mono', monospace;
+    --sidebar-w:  260px;
+    --topbar-h:   60px;
+  }
+
+  /* ── RESET ───────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ── SIDEBAR ─────────────────────────────────────────── */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--slate);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    overflow-y: auto;
+  }
+  .sidebar-brand {
+    padding: 22px 20px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .brand-icon {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--cyan), #0066FF);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: var(--font-disp);
+    color: var(--navy);
+    flex-shrink: 0;
+  }
+  .brand-name {
+    font-family: var(--font-disp);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.3px;
+  }
+  .brand-name span { color: var(--cyan); }
+  .brand-tagline {
+    font-size: 10.5px;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+    padding-left: 44px;
+  }
+
+  .nav-section {
+    padding: 16px 12px 4px;
+  }
+  .nav-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 8px;
+    margin-bottom: 6px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--muted-lt);
+    font-size: 13px;
+    font-weight: 400;
+    margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--slate-md); color: var(--white); }
+  .nav-item.active {
+    background: var(--cyan-dim);
+    color: var(--cyan);
+    font-weight: 500;
+    border: 1px solid var(--border-lt);
+  }
+  .nav-icon { width: 16px; text-align: center; font-size: 15px; flex-shrink: 0; }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--amber);
+    color: var(--navy);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+  }
+  .nav-badge.green { background: var(--green); }
+  .nav-badge.red { background: var(--red); }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .sidebar-footer strong { color: var(--muted-lt); display: block; margin-bottom: 2px; }
+  .status-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    margin-right: 5px;
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── MAIN LAYOUT ─────────────────────────────────────── */
+  .main {
+    margin-left: var(--sidebar-w);
+    min-height: 100vh;
+  }
+  .topbar {
+    height: var(--topbar-h);
+    background: var(--slate);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar-title {
+    font-family: var(--font-disp);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    flex: 1;
+  }
+  .topbar-title span { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: 6px; }
+  .topbar-controls { display: flex; align-items: center; gap: 10px; }
+  .topbar-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 13px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted-lt);
+  }
+  .topbar-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+  .topbar-btn.primary {
+    background: var(--cyan);
+    color: var(--navy);
+    border-color: var(--cyan);
+    font-weight: 600;
+  }
+  .topbar-btn.primary:hover { background: #00b8df; }
+  .topbar-date {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    padding: 5px 10px;
+    background: var(--navy);
+    border-radius: 5px;
+  }
+
+  /* ── PAGE SECTIONS ───────────────────────────────────── */
+  .page { display: none; padding: 28px; animation: fadeIn 0.25s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── GRID / UTILITIES ────────────────────────────────── */
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+  .card {
+    background: var(--slate);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card-sm { padding: 14px 16px; }
+  .card:hover { border-color: rgba(139,154,181,0.32); }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .section-title {
+    font-family: var(--font-disp);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  .section-sub {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .section-action {
+    font-size: 12px;
+    color: var(--cyan);
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .section-action:hover { text-decoration: underline; }
+
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .tag-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+  .tag-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+  .tag-red   { background: var(--red-dim);   color: var(--red);   border: 1px solid rgba(239,68,68,0.3); }
+  .tag-cyan  { background: var(--cyan-dim);  color: var(--cyan);  border: 1px solid var(--border-lt); }
+
+  /* ── SCORE RINGS ─────────────────────────────────────── */
+  .score-ring-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .ring-svg { transform: rotate(-90deg); }
+  .ring-track { fill: none; stroke: var(--slate-md); stroke-width: 8; }
+  .ring-fill  { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1); }
+  .ring-label {
+    font-family: var(--font-disp);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    text-align: center;
+  }
+  .ring-sublabel { font-size: 11px; color: var(--muted); text-align: center; }
+
+  /* ── STAT CARDS ──────────────────────────────────────── */
+  .stat-card {
+    background: var(--slate);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent, var(--cyan));
+  }
+  .stat-label { font-size: 11.5px; color: var(--muted); font-weight: 500; letter-spacing: 0.3px; }
+  .stat-value {
+    font-family: var(--font-disp);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+  }
+  .stat-value.sm { font-size: 20px; }
+  .stat-delta { font-size: 11.5px; display: flex; align-items: center; gap: 4px; }
+  .stat-delta.up { color: var(--green); }
+  .stat-delta.down { color: var(--red); }
+
+  /* ── HERO / OVERVIEW ─────────────────────────────────── */
+  .hero-band {
+    background: linear-gradient(135deg, var(--slate-md) 0%, var(--slate) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 36px;
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 32px;
+    align-items: center;
+    margin-bottom: 24px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero-band::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 10px;
+  }
+  .hero-title {
+    font-family: var(--font-disp);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--white);
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+  .hero-desc {
+    font-size: 13.5px;
+    color: var(--muted-lt);
+    line-height: 1.65;
+    max-width: 520px;
+    margin-bottom: 20px;
+  }
+  .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+    font-family: var(--font-body);
+  }
+  .btn-primary { background: var(--cyan); color: var(--navy); }
+  .btn-primary:hover { background: #00b8df; transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--muted-lt); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--muted); color: var(--white); }
+
+  /* Architecture Diagram */
+  .arch-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .arch-layer {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .arch-layer + .arch-layer { margin-top: 4px; }
+  .arch-layer:hover { border-color: var(--cyan); background: var(--cyan-dim); }
+  .arch-layer-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .arch-layer-name {
+    font-family: var(--font-disp);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  .arch-layer-desc { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .arch-layer.l1 { --lc: #10B981; border-left: 3px solid var(--lc); }
+  .arch-layer.l2 { --lc: #00D4FF; border-left: 3px solid var(--lc); }
+  .arch-layer.l3 { --lc: #F59E0B; border-left: 3px solid var(--lc); }
+  .arch-layer.l4 { --lc: #8B5CF6; border-left: 3px solid var(--lc); }
+  .arch-arrow {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin: 1px 0;
+    line-height: 1;
+  }
+
+  /* ── SIMULATION ENGINE ───────────────────────────────── */
+  .sim-grid {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 20px;
+  }
+  .scores-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .score-card {
+    background: var(--slate);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .score-card-title { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 0.3px; text-align: center; }
+
+  /* ── RISK INDICATORS ─────────────────────────────────── */
+  .risk-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .risk-row:last-child { border-bottom: none; }
+  .risk-label { font-size: 13px; color: var(--muted-lt); flex: 1; }
+  .risk-bar-wrap { flex: 2; height: 6px; background: var(--slate-md); border-radius: 3px; overflow: hidden; }
+  .risk-bar { height: 100%; border-radius: 3px; transition: width 1s ease; }
+  .risk-val { font-size: 12px; font-family: var(--font-mono); color: var(--white); width: 35px; text-align: right; }
+
+  /* ── OPPORTUNITY COST ────────────────────────────────── */
+  .opp-display {
+    background: var(--slate-md);
+    border: 1px solid var(--border-lt);
+    border-radius: 12px;
+    padding: 22px;
+    margin-top: 16px;
+  }
+  .opp-budget {
+    font-family: var(--font-disp);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--cyan);
+    margin-bottom: 4px;
+  }
+  .opp-budget span { font-size: 14px; color: var(--muted); font-weight: 400; }
+  .opp-alternatives { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .opp-alt {
+    background: var(--slate);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 14px;
+    text-align: center;
+  }
+  .opp-alt-icon { font-size: 24px; margin-bottom: 6px; }
+  .opp-alt-num { font-family: var(--font-disp); font-size: 18px; font-weight: 700; color: var(--white); }
+  .opp-alt-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  /* ── POLICY TABLE ────────────────────────────────────── */
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { border-bottom: 1px solid var(--border); }
+  th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 14px;
+  }
+  td { padding: 13px 14px; font-size: 13px; border-bottom: 1px solid var(--border); color: var(--muted-lt); }
+  td:first-child { color: var(--white); font-weight: 500; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--slate-md); }
+  .prog-bar { height: 4px; background: var(--slate-md); border-radius: 2px; overflow: hidden; margin-top: 5px; }
+  .prog-fill { height: 100%; border-radius: 2px; }
+
+  /* ── TRANSPARENCY / PUBLIC ───────────────────────────── */
+  .pub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .tracker-item {
+    background: var(--slate);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .tracker-icon {
+    width: 38px; height: 38px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .tracker-icon.green { background: var(--green-dim); }
+  .tracker-icon.cyan  { background: var(--cyan-dim); }
+  .tracker-icon.amber { background: var(--amber-dim); }
+  .tracker-info { flex: 1; }
+  .tracker-name { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 3px; }
+  .tracker-stat { font-family: var(--font-disp); font-size: 20px; font-weight: 700; }
+  .tracker-sub { font-size: 11px; color: var(--muted); }
+
+  /* ── ACCOUNTABILITY LEDGER ───────────────────────────── */
+  .ledger-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.2fr 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ledger-row.header { background: var(--slate-md); border-radius: 8px 8px 0 0; }
+  .ledger-row.header div { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); }
+  .ledger-row:last-child { border-bottom: none; }
+  .ledger-policy-name { font-size: 13px; font-weight: 500; color: var(--white); }
+  .ledger-policy-id { font-size: 11px; font-family: var(--font-mono); color: var(--muted); }
+  .override-flag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 8px; border-radius: 5px;
+  }
+  .override-flag.yes { background: var(--red-dim); color: var(--red); }
+  .override-flag.no  { background: var(--green-dim); color: var(--green); }
+
+  /* ── PROPOSAL FORM ───────────────────────────────────── */
+  .form-group { margin-bottom: 18px; }
+  .form-label { font-size: 12px; font-weight: 600; color: var(--muted-lt); margin-bottom: 6px; display: block; letter-spacing: 0.2px; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--slate-md);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    padding: 9px 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--cyan); }
+  .form-textarea { resize: vertical; min-height: 80px; }
+  .form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
+  .form-select option { background: var(--slate-md); }
+
+  .form-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* ── PREDICTION VS REALITY ───────────────────────────── */
+  .pvr-table td:not(:first-child) { text-align: center; }
+  .pvr-table th:not(:first-child) { text-align: center; }
+  .pvr-gap { font-family: var(--font-mono); font-size: 12px; }
+  .pvr-gap.pos { color: var(--green); }
+  .pvr-gap.neg { color: var(--red); }
+
+  /* ── ALERT BOX ───────────────────────────────────────── */
+  .alert {
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .alert.info  { background: var(--cyan-dim);  border: 1px solid var(--border-lt); color: var(--muted-lt); }
+  .alert.warn  { background: var(--amber-dim); border: 1px solid rgba(245,158,11,0.3); color: var(--muted-lt); }
+  .alert.error { background: var(--red-dim);   border: 1px solid rgba(239,68,68,0.3);  color: var(--muted-lt); }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .alert strong { color: var(--white); }
+
+  /* ── TOGGLE ──────────────────────────────────────────── */
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+  .tab-btn {
+    padding: 7px 16px; border-radius: 7px;
+    font-size: 12.5px; font-weight: 500;
+    cursor: pointer; border: 1px solid transparent;
+    background: transparent; color: var(--muted);
+    transition: all 0.15s;
+  }
+  .tab-btn:hover { color: var(--white); }
+  .tab-btn.active { background: var(--cyan-dim); border-color: var(--border-lt); color: var(--cyan); font-weight: 600; }
+
+  /* ── SCROLLBAR ───────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--slate-lt); border-radius: 3px; }
+
+  /* ── RESPONSIVE ──────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .hero-band { grid-template-columns: 1fr; }
+    .sim-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── FEEDBACK TOAST ──────────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--slate);
+    border: 1px solid var(--border-lt);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--white);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    z-index: 999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 300px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast strong { color: var(--cyan); }
+
+  /* ── DOUGHNUT CHART ──────────────────────────────────── */
+  .mini-donut { position: relative; width: 80px; height: 80px; }
+  .mini-donut svg { transform: rotate(-90deg); }
+  .mini-donut-val {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-disp);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+  }
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ──────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">
+      <div class="brand-icon">G+</div>
+      <div class="brand-name">GovInsight<span>+</span></div>
+    </div>
+    <div class="brand-tagline">National Policy Intelligence Platform</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item active" onclick="showPage('dashboard')">
+      <span class="nav-icon">⬡</span> Dashboard Utama
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Layer 1 — Data</div>
+    <div class="nav-item" onclick="showPage('data-hub')">
+      <span class="nav-icon">🗄</span> National Data Hub
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Layer 2 — Intelligence</div>
+    <div class="nav-item" onclick="showPage('proposal')">
+      <span class="nav-icon">📋</span> Proposal Hub
+      <span class="nav-badge">3 Baru</span>
+    </div>
+    <div class="nav-item" onclick="showPage('simulation')">
+      <span class="nav-icon">⚙</span> Simulasi Kebijakan
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Layer 3 — Keputusan</div>
+    <div class="nav-item" onclick="showPage('decision')">
+      <span class="nav-icon">⚖</span> Decision Center
+    </div>
+    <div class="nav-item" onclick="showPage('review')">
+      <span class="nav-icon">🔍</span> Special Review
+      <span class="nav-badge red">2</span>
+    </div>
+    <div class="nav-item" onclick="showPage('ledger')">
+      <span class="nav-icon">📓</span> Accountability Ledger
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Layer 4 — Publik</div>
+    <div class="nav-item" onclick="showPage('transparency')">
+      <span class="nav-icon">🌐</span> Transparency Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('consultation')">
+      <span class="nav-icon">💬</span> Konsultasi Publik
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Pasca Implementasi</div>
+    <div class="nav-item" onclick="showPage('evaluation')">
+      <span class="nav-icon">📊</span> Evaluasi Kebijakan
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <strong>Kementerian PPN/Bappenas</strong>
+    <div><span class="status-dot"></span>Sistem aktif · Sinkronisasi 5 mnt lalu</div>
+  </div>
+</aside>
+
+<!-- ── MAIN ──────────────────────────────────────────────── -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Dashboard Utama <span>Ikhtisar Kebijakan Nasional</span></div>
+    <div class="topbar-controls">
+      <div class="topbar-date" id="current-date">—</div>
+      <button class="topbar-btn">⬇ Export</button>
+      <button class="topbar-btn primary" onclick="showPage('proposal')">+ Ajukan Proposal</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PAGE: DASHBOARD                   -->
+  <!-- ══════════════════════════════════ -->
+  <div class="page active" id="page-dashboard">
+    <div class="hero-band">
+      <div>
+        <div class="hero-eyebrow">National Policy Intelligence Platform</div>
+        <div class="hero-title">Evaluasi Kebijakan Sebelum<br>APBN Digunakan</div>
+        <div class="hero-desc">GovInsight+ mengintegrasikan data pembangunan nasional, aspirasi masyarakat, dan analisis risiko fiskal ke dalam satu sistem evaluasi <em>ex-ante</em> berbasis AI. Kebijakan yang lebih baik dimulai dari keputusan yang lebih terinformasi.</div>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="showPage('simulation')">⚙ Mulai Simulasi</button>
+          <button class="btn btn-ghost" onclick="showPage('proposal')">Lihat Proposal Aktif</button>
+        </div>
+      </div>
+      <div class="arch-diagram">
+        <div class="arch-layer l1" onclick="showPage('data-hub')">
+          <div class="arch-layer-num">LAYER 01</div>
+          <div class="arch-layer-name">Data Integration</div>
+          <div class="arch-layer-desc">Musrenbang, SIPD, BPS, BPK, K/L</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer l2" onclick="showPage('simulation')">
+          <div class="arch-layer-num">LAYER 02</div>
+          <div class="arch-layer-name">Policy Intelligence</div>
+          <div class="arch-layer-desc">AI Simulation Engine · 6 modul analitik</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer l3" onclick="showPage('decision')">
+          <div class="arch-layer-num">LAYER 03</div>
+          <div class="arch-layer-name">Decision & Accountability</div>
+          <div class="arch-layer-desc">Decision Center · Accountability Ledger</div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-layer l4" onclick="showPage('transparency')">
+          <div class="arch-layer-num">LAYER 04</div>
+          <div class="arch-layer-name">Public Transparency</div>
+          <div class="arch-layer-desc">Open Dashboard · Citizen Feedback</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI Stats -->
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-card">
+        <div class="stat-label">APBN FY 2025</div>
+        <div class="stat-value">3.621</div>
+        <div style="font-size:12px;color:var(--muted)">Triliun Rupiah</div>
+        <div class="stat-delta up">▲ Data terkini Kemenkeu</div>
+      </div>
+      <div class="stat-card" style="--accent:var(--amber)">
+        <div class="stat-label">Kebijakan Aktif</div>
+        <div class="stat-value">247</div>
+        <div style="font-size:12px;color:var(--muted)">Sedang berjalan / review</div>
+        <div class="stat-delta">18 masuk bulan ini</div>
+      </div>
+      <div class="stat-card" style="--accent:var(--red)">
+        <div class="stat-label">High-Risk Pending</div>
+        <div class="stat-value" style="color:var(--red)">2</div>
+        <div style="font-size:12px;color:var(--muted)">Menunggu Special Review</div>
+        <div class="stat-delta down">▲ +1 dari minggu lalu</div>
+      </div>
+      <div class="stat-card" style="--accent:var(--green)">
+        <div class="stat-label">Regulatory Quality Index</div>
+        <div class="stat-value">56.83</div>
+        <div style="font-size:12px;color:var(--muted)">WGI World Bank 2023</div>
+        <div class="stat-delta">Target: 65.0 pada 2030</div>
+      </div>
+    </div>
+
+    <!-- Policy Pipeline & SDGs -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Pipeline Kebijakan</div>
+            <div class="section-sub">Status terkini per K/L</div>
+          </div>
+          <div class="section-action" onclick="showPage('decision')">Lihat semua →</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Program</th>
+              <th>K/L</th>
+              <th>Skor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                Digitalisasi Layanan Desa<br>
+                <span style="font-size:11px;color:var(--muted)">Rp 4,2 T</span>
+              </td>
+              <td style="font-size:12px">Kemendesa</td>
+              <td>
+                <span style="color:var(--green);font-family:var(--font-mono);font-weight:700">82</span>
+                <div class="prog-bar"><div class="prog-fill" style="width:82%;background:var(--green)"></div></div>
+              </td>
+              <td><span class="tag tag-green">🟢 Disetujui</span></td>
+            </tr>
+            <tr>
+              <td>
+                Jaminan Gizi Balita<br>
+                <span style="font-size:11px;color:var(--muted)">Rp 2,8 T</span>
+              </td>
+              <td style="font-size:12px">Kemenkes</td>
+              <td>
+                <span style="color:var(--amber);font-family:var(--font-mono);font-weight:700">67</span>
+                <div class="prog-bar"><div class="prog-fill" style="width:67%;background:var(--amber)"></div></div>
+              </td>
+              <td><span class="tag tag-amber">🟡 Revisi Minor</span></td>
+            </tr>
+            <tr>
+              <td>
+                Infrastruktur Energi Hijau<br>
+                <span style="font-size:11px;color:var(--muted)">Rp 12,5 T</span>
+              </td>
+              <td style="font-size:12px">ESDM</td>
+              <td>
+                <span style="color:var(--red);font-family:var(--font-mono);font-weight:700">41</span>
+                <div class="prog-bar"><div class="prog-fill" style="width:41%;background:var(--red)"></div></div>
+              </td>
+              <td><span class="tag tag-red">🔴 Special Review</span></td>
+            </tr>
+            <tr>
+              <td>
+                Beasiswa Vokasi Nasional<br>
+                <span style="font-size:11px;color:var(--muted)">Rp 3,1 T</span>
+              </td>
+              <td style="font-size:12px">Kemendikbud</td>
+              <td>
+                <span style="color:var(--cyan);font-family:var(--font-mono);font-weight:700">74</span>
+                <div class="prog-bar"><div class="prog-fill" style="width:74%;background:var(--cyan)"></div></div>
+              </td>
+              <td><span class="tag tag-cyan">📋 Simulasi</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Kontribusi SDGs</div>
+            <div class="section-sub">Agregat kebijakan aktif · FY 2025</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div class="score-ring-wrap">
+            <svg class="ring-svg" width="70" height="70" viewBox="0 0 70 70">
+              <circle class="ring-track" cx="35" cy="35" r="28"/>
+              <circle class="ring-fill" cx="35" cy="35" r="28" stroke="#10B981"
+                stroke-dasharray="175.9" stroke-dashoffset="44"/>
+            </svg>
+            <div class="ring-label">75</div>
+            <div class="ring-sublabel">SDG 1<br>Tanpa Kemiskinan</div>
+          </div>
+          <div class="score-ring-wrap">
+            <svg class="ring-svg" width="70" height="70" viewBox="0 0 70 70">
+              <circle class="ring-track" cx="35" cy="35" r="28"/>
+              <circle class="ring-fill" cx="35" cy="35" r="28" stroke="#00D4FF"
+                stroke-dasharray="175.9" stroke-dashoffset="61.6"/>
+            </svg>
+            <div class="ring-label">65</div>
+            <div class="ring-sublabel">SDG 3<br>Kesehatan</div>
+          </div>
+          <div class="score-ring-wrap">
+            <svg class="ring-svg" width="70" height="70" viewBox="0 0 70 70">
+              <circle class="ring-track" cx="35" cy="35" r="28"/>
+              <circle class="ring-fill" cx="35" cy="35" r="28" stroke="#F59E0B"
+                stroke-dasharray="175.9" stroke-dashoffset="52.8"/>
+            </svg>
+            <div class="ring-label">70</div>
+            <div class="ring-sublabel">SDG 4<br>Pendidikan</div>
+          </div>
+          <div class="score-ring-wrap">
+            <svg class="ring-svg" width="70" height="70" viewBox="0 0 70 70">
+              <circle class="ring-track" cx="35" cy="35" r="28"/>
+              <circle class="ring-fill" cx="35" cy="35" r="28" stroke="#8B5CF6"
+                stroke-dasharray="175.9" stroke-dashoffset="88"/>
+            </svg>
+            <div class="ring-label">50</div>
+            <div class="ring-sublabel">SDG 7<br>Energi Bersih</div>
+          </div>
+          <div class="score-ring-wrap">
+            <svg class="ring-svg" width="70" height="70" viewBox="0 0 70 70">
+              <circle class="ring-track" cx="35" cy="35" r="28"/>
+              <circle class="ring-fill" cx="35" cy="35" r="28" stroke="#EF4444"
+                stroke-dasharray="175.9" stroke-dashoffset="70.4"/>
+            </svg>
+            <div class="ring-label">60</div>
+            <div class="ring-sublabel">SDG 8<br>Pekerjaan Layak</div>
+          </div>
+          <div class="score-ring-wrap">
+            <svg class="ring-svg" width="70" height="70" viewBox="0 0 70 70">
+              <circle class="ring-track" cx="35" cy="35" r="28"/>
+              <circle class="ring-fill" cx="35" cy="35" r="28" stroke="#10B981"
+                stroke-dasharray="175.9" stroke-dashoffset="35.2"/>
+            </svg>
+            <div class="ring-label">80</div>
+            <div class="ring-sublabel">SDG 17<br>Kemitraan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PAGE: DATA HUB                    -->
+  <!-- ══════════════════════════════════ -->
+  <div class="page" id="page-data-hub">
+    <div class="section-header">
+      <div>
+        <div class="section-title">National Data Hub</div>
+        <div class="section-sub">Pusat integrasi data kebijakan nasional — Layer 1</div>
+      </div>
+    </div>
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="stat-card"><div class="stat-label">Sumber Aktif</div><div class="stat-value">10</div><div class="stat-delta up">▲ Semua tersinkronisasi</div></div>
+      <div class="stat-card" style="--accent:var(--amber)"><div class="stat-label">Total Rekaman</div><div class="stat-value sm">4,7 Jt</div><div class="stat-delta">Data kebijakan historis</div></div>
+      <div class="stat-card" style="--accent:var(--green)"><div class="stat-label">Update Terakhir</div><div class="stat-value sm">5 mnt</div><div class="stat-delta up">Real-time sync</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-title" style="margin-bottom:16px;font-size:15px">Sumber Data Terintegrasi</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="tracker-item">
+            <div class="tracker-icon green">📋</div>
+            <div class="tracker-info">
+              <div class="tracker-name">Musrenbang</div>
+              <div class="tracker-stat green" style="color:var(--green);font-size:14px">38.421 usulan</div>
+              <div class="tracker-sub">Terintegrasi via SIPD · Pembaruan harian</div>
+            </div>
+            <span class="tag tag-green">Aktif</span>
+          </div>
+          <div class="tracker-item">
+            <div class="tracker-icon cyan">📊</div>
+            <div class="tracker-info">
+              <div class="tracker-name">BPS — Statistik Nasional</div>
+              <div class="tracker-stat" style="color:var(--cyan);font-size:14px">1.240 indikator</div>
+              <div class="tracker-sub">Sensus, Susenas, Sakernas</div>
+            </div>
+            <span class="tag tag-green">Aktif</span>
+          </div>
+          <div class="tracker-item">
+            <div class="tracker-icon amber">💰</div>
+            <div class="tracker-info">
+              <div class="tracker-name">Kemenkeu — Data Fiskal</div>
+              <div class="tracker-stat" style="color:var(--amber);font-size:14px">APBN Rp 3.621 T</div>
+              <div class="tracker-sub">DIPA, realisasi, transfer daerah</div>
+            </div>
+            <span class="tag tag-green">Aktif</span>
+          </div>
+          <div class="tracker-item">
+            <div class="tracker-icon green">🔍</div>
+            <div class="tracker-info">
+              <div class="tracker-name">BPK — Audit Keuangan</div>
+              <div class="tracker-stat" style="color:var(--green);font-size:14px">247 laporan</div>
+              <div class="tracker-sub">Audit Kinerja, LKPP, LKKL</div>
+            </div>
+            <span class="tag tag-green">Aktif</span>
+          </div>
+          <div class="tracker-item">
+            <div class="tracker-icon cyan">📣</div>
+            <div class="tracker-info">
+              <div class="tracker-name">SP4N-LAPOR!</div>
+              <div class="tracker-stat" style="color:var(--cyan);font-size:14px">92.380 aduan</div>
+              <div class="tracker-sub">Aspirasi & pengaduan masyarakat</div>
+            </div>
+            <span class="tag tag-green">Aktif</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title" style="margin-bottom:16px;font-size:15px">Policy Data Warehouse</div>
+        <div class="alert info">
+          <span class="alert-icon">ℹ</span>
+          <div><strong>Big Data Kebijakan Indonesia</strong> — seluruh data kebijakan nasional tersimpan dalam satu gudang data terpadu yang dapat diakses oleh modul simulasi AI.</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px">
+          <div class="card card-sm" style="background:var(--slate-md)">
+            <div class="stat-label">Kebijakan Historis</div>
+            <div style="font-family:var(--font-disp);font-size:22px;font-weight:700;color:var(--white)">18.240</div>
+            <div class="stat-delta">Sejak 2004</div>
+          </div>
+          <div class="card card-sm" style="background:var(--slate-md)">
+            <div class="stat-label">RPJMN Terindeks</div>
+            <div style="font-family:var(--font-disp);font-size:22px;font-weight:700;color:var(--white)">5 Periode</div>
+            <div class="stat-delta">2005–2025</div>
+          </div>
+          <div class="card card-sm" style="background:var(--slate-md)">
+            <div class="stat-label">Perda & PP Nasional</div>
+            <div style="font-family:var(--font-disp);font-size:22px;font-weight:700;color:var(--white)">47.000+</div>
+            <div class="stat-delta">Prolegnas termasuk</div>
+          </div>
+          <div class="card card-sm" style="background:var(--slate-md)">
+            <div class="stat-label">SDGs Indikator</div>
+            <div style="font-family:var(--font-disp);font-size:22px;font-weight:700;color:var(--white)">232</div>
+            <div class="stat-delta">17 tujuan terpantau</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PAGE: PROPOSAL HUB                -->
+  <!-- ══════════════════════════════════ -->
+  <div class="page" id="page-proposal">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Policy Proposal Hub</div>
+        <div class="section-sub">Unggah dan kelola proposal program — Layer 2</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-title" style="margin-bottom:18px;font-size:15px">📋 Policy Canvas — Template Standar</div>
+        <div class="form-group">
+          <label class="form-label">Nama Program</label>
+          <input class="form-input" type="text" placeholder="Cth: Program Digitalisasi UMKM Nasional" value="Program Beasiswa Vokasi 2026">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Kementerian / Lembaga</label>
+            <select class="form-select">
+              <option>Kemendikbud Ristek</option>
+              <option>Kemenkes</option>
+              <option>Kemendesa</option>
+              <option>ESDM</option>
+              <option>Kemenperin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kebutuhan Anggaran</label>
+            <input class="form-input" type="text" placeholder="Cth: Rp 3,1 Triliun" value="Rp 3.100.000.000.000">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Problem Statement</label>
+          <textarea class="form-textarea" placeholder="Apa masalah yang ingin diselesaikan?">Tingkat pengangguran pemuda usia 15–24 mencapai 18,7% (BPS 2024). Gap antara kebutuhan industri dan kompetensi lulusan SMK menjadi hambatan utama penyerapan tenaga kerja.</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Objective</label>
+          <textarea class="form-textarea">Meningkatkan kompetensi 100.000 pemuda melalui beasiswa vokasi bersertifikasi industri dalam 3 tahun (2026–2028).</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target Group</label>
+          <input class="form-input" value="Pemuda usia 18–25, lulusan SMP/SMA sederajat, keluarga tidak mampu (desil 1–3)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">KPI Utama</label>
+          <input class="form-input" value="100.000 penerima beasiswa · 80% tingkat keterserapan kerja · 20% peningkatan upah median">
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="showPage('simulation');showToast('✅ Proposal dikirim ke simulasi AI')">⚙ Kirim ke Simulasi AI</button>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="section-title" style="font-size:15px;margin-bottom:14px">Proposal Masuk</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--slate-md);border-radius:8px;cursor:pointer" onclick="showToast('📋 Membuka proposal...')">
+              <div>
+                <div style="font-size:13px;font-weight:500;color:var(--white)">Digitalisasi Layanan Desa</div>
+                <div style="font-size:11px;color:var(--muted)">Kemendesa · Rp 4,2 T</div>
+              </div>
+              <span class="tag tag-green">Simulasi Selesai</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--slate-md);border-radius:8px;cursor:pointer" onclick="showToast('📋 Membuka proposal...')">
+              <div>
+                <div style="font-size:13px;font-weight:500;color:var(--white)">Jaminan Gizi Balita</div>
+                <div style="font-size:11px;color:var(--muted)">Kemenkes · Rp 2,8 T</div>
+              </div>
+              <span class="tag tag-amber">Menunggu Revisi</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--slate-md);border-radius:8px;cursor:pointer" onclick="showToast('📋 Membuka proposal...')">
+              <div>
+                <div style="font-size:13px;font-weight:500;color:var(--white)">Infrastruktur Energi Hijau</div>
+                <div style="font-size:11px;color:var(--muted)">ESDM · Rp 12,5 T</div>
+              </div>
+              <span class="tag tag-red">High Risk Review</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title" style="font-size:15px;margin-bottom:10px">Panduan Policy Canvas</div>
+          <div style="font-size:12.5px;color:var(--muted-lt);line-height:1.7">
+            Setiap proposal wajib memuat <strong style="color:var(--white)">6 komponen</strong> utama:<br><br>
+            <span style="color:var(--cyan)">①</span> Problem Statement — masalah yang ingin diselesaikan<br>
+            <span style="color:var(--cyan)">②</span> Objective — tujuan terukur<br>
+            <span style="color:var(--cyan)">③</span> Target Group — penerima manfaat spesifik<br>
+            <span style="color:var(--cyan)">④</span> Budget — kebutuhan anggaran terinci<br>
+            <span style="color:var(--cyan)">⑤</span> KPI — indikator keberhasilan<br>
+            <span style="color:var(--cyan)">⑥</span> Timeline — estimasi pelaksanaan<br><br>
+            <span style="color:var(--muted)">Proposal yang tidak lengkap tidak dapat masuk ke tahap simulasi AI.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PAGE: SIMULASI                    -->
+  <!-- ══════════════════════════════════ -->
+  <div class="page" id="page-simulation">
+    <div class="section-header">
+      <div>
+        <div class="section-title">AI Policy Simulation Engine</div>
+        <div class="section-sub">Simulasi ex-ante kebijakan — Program Beasiswa Vokasi 2026</div>
+      </div>
+      <span class="tag tag-cyan">🤖 Analisis Selesai</span>
+    </div>
+
+    <div class="alert info" style="margin-bottom:20px">
+      <span class="alert-icon">🤖</span>
+      <div><strong>AI GovInsight+</strong> — Simulasi berdasarkan 4,7 juta rekaman data historis nasional, benchmarking 47 program serupa, dan proyeksi model ekonometrik. Tingkat kepercayaan: <strong>87%</strong></div>
+    </div>
+
+    <div class="sim-grid">
+      <div>
+        <!-- Score Cards -->
+        <div class="scores-grid" style="margin-bottom:20px">
+          <div class="score-card">
+            <div class="score-card-title">PUBLIC BENEFIT SCORE</div>
+            <svg class="ring-svg" width="100" height="100" viewBox="0 0 100 100">
+              <circle class="ring-track" cx="50" cy="50" r="40"/>
+              <circle class="ring-fill" cx="50" cy="50" r="40" stroke="#10B981"
+                stroke-dasharray="251.3" stroke-dashoffset="45.2"/>
+            </svg>
+            <div class="ring-label" style="font-size:28px">82</div>
+            <div class="ring-sublabel">100.000+ penerima manfaat langsung<br>Dampak sosial: Tinggi</div>
+          </div>
+          <div class="score-card">
+            <div class="score-card-title">FISCAL EFFICIENCY SCORE</div>
+            <svg class="ring-svg" width="100" height="100" viewBox="0 0 100 100">
+              <circle class="ring-track" cx="50" cy="50" r="40"/>
+              <circle class="ring-fill" cx="50" cy="50" r="40" stroke="#00D4FF"
+                stroke-dasharray="251.3" stroke-dashoffset="55.3"/>
+            </svg>
+            <div class="ring-label" style="font-size:28px">78</div>
+            <div class="ring-sublabel">Rp 31jt per penerima<br>ROI: 2,4x dalam 5 tahun</div>
+          </div>
+          <div class="score-card">
+            <div class="score-card-title">SDGs IMPACT SCORE</div>
+            <svg class="ring-svg" width="100" height="100" viewBox="0 0 100 100">
+              <circle class="ring-track" cx="50" cy="50" r="40"/>
+              <circle class="ring-fill" cx="50" cy="50" r="40" stroke="#F59E0B"
+                stroke-dasharray="251.3" stroke-dashoffset="50.3"/>
+            </svg>
+            <div class="ring-label" style="font-size:28px">80</div>
+            <div class="ring-sublabel">SDG 1, 4, 8 terdampak positif<br>Kontribusi kuat pada SDG 4</div>
+          </div>
+          <div class="score-card">
+            <div class="score-card-title">PRIORITY ALIGNMENT</div>
+            <svg class="ring-svg" width="100" height="100" viewBox="0 0 100 100">
+              <circle class="ring-track" cx="50" cy="50" r="40"/>
+              <circle class="ring-fill" cx="50" cy="50" r="40" stroke="#8B5CF6"
+                stroke-dasharray="251.3" stroke-dashoffset="37.7"/>
+            </svg>
+            <div class="ring-label" style="font-size:28px">85</div>
+            <div class="ring-sublabel">Selaras RPJMN 2025–2029<br>Asta Cita prioritas ke-3</div>
+          </div>
+        </div>
+
+        <!-- Opportunity Cost -->
+        <div class="card" style="margin-bottom:20px">
+          <div class="section-title" style="font-size:15px;margin-bottom:4px">Opportunity Cost Analyzer</div>
+          <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">Dengan anggaran yang sama (Rp 3,1 Triliun), pemerintah dapat membangun:</div>
+          <div class="opp-display">
+            <div class="opp-budget">Rp 3,1 T <span>— Dana Program Beasiswa Vokasi</span></div>
+            <div class="opp-alternatives">
+              <div class="opp-alt">
+                <div class="opp-alt-icon">🏫</div>
+                <div class="opp-alt-num">248</div>
+                <div class="opp-alt-label">Sekolah Vokasi Baru</div>
+              </div>
+              <div class="opp-alt">
+                <div class="opp-alt-icon">🏥</div>
+                <div class="opp-alt-num">41</div>
+                <div class="opp-alt-label">RSUD Tipe C</div>
+              </div>
+              <div class="opp-alt">
+                <div class="opp-alt-icon">🎓</div>
+                <div class="opp-alt-num">100.000</div>
+                <div class="opp-alt-label">Beasiswa Full S1</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-top:10px">Rekomendasi AI: Program beasiswa memiliki <strong style="color:var(--green)">ROI sosial lebih tinggi</strong> dibandingkan pembangunan infrastruktur fisik untuk target kelompok ini.</div>
+        </div>
+      </div>
+
+      <!-- Risk Panel -->
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="section-title" style="font-size:15px;margin-bottom:16px">Risk Assessment</div>
+          <div class="risk-row">
+            <div class="risk-label">Risiko Fiskal</div>
+            <div class="risk-bar-wrap"><div class="risk-bar" style="width:25%;background:var(--green)"></div></div>
+            <div class="risk-val" style="color:var(--green)">25%</div>
+          </div>
+          <div class="risk-row">
+            <div class="risk-label">Risiko Sosial</div>
+            <div class="risk-bar-wrap"><div class="risk-bar" style="width:18%;background:var(--green)"></div></div>
+            <div class="risk-val" style="color:var(--green)">18%</div>
+          </div>
+          <div class="risk-row">
+            <div class="risk-label">Risiko Politik</div>
+            <div class="risk-bar-wrap"><div class="risk-bar" style="width:35%;background:var(--amber)"></div></div>
+            <div class="risk-val" style="color:var(--amber)">35%</div>
+          </div>
+          <div class="risk-row">
+            <div class="risk-label">Risiko Implementasi</div>
+            <div class="risk-bar-wrap"><div class="risk-bar" style="width:42%;background:var(--amber)"></div></div>
+            <div class="risk-val" style="color:var(--amber)">42%</div>
+          </div>
+          <div style="margin-top:14px;padding:12px;background:var(--slate-md);border-radius:8px;border-left:3px solid var(--amber)">
+            <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:4px">⚠ Risiko Implementasi Sedang</div>
+            <div style="font-size:12px;color:var(--muted-lt)">Diperlukan sistem seleksi penerima yang kuat dan mekanisme monitoring berbasis data real-time.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title" style="font-size:15px;margin-bottom:14px">Skor Keseluruhan</div>
+          <div style="text-align:center;padding:16px 0">
+            <div style="font-family:var(--font-disp);font-size:52px;font-weight:700;color:var(--green);line-height:1">74</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px">Composite Policy Score</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="showPage('decision');showToast('✅ Dikirim ke Decision Center')">Kirim ke Decision Center</button>
+            <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="showToast('📄 Laporan simulasi diunduh')">⬇ Unduh Laporan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PAGE: DECISION CENTER             -->
+  <!-- ══════════════════════════════════ -->
+  <div class="page" id="page-decision">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Decision Center</div>
+        <div class="section-sub">Pusat pengambilan keputusan kebijakan berdasarkan hasil simulasi</div>
+      </div>
+    </div>
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="stat-card" style="--accent:var(--green)"><div class="stat-label">Siap Disetujui</div><div class="stat-value" style="color:var(--green)">12</div><div class="stat-delta up">▲ Low Risk · Langsung approval</div></div>
+      <div class="stat-card" style="--accent:var(--amber)"><div class="stat-label">Perlu Revisi</div><div class="stat-value" style="color:var(--amber)">7</div><div class="stat-delta">Medium Risk · Revisi minor</div></div>
+      <div class="stat-card" style="--accent:var(--red)"><div class="stat-label">Special Review</div><div class="stat-value" style="color:var(--red)">2</div><div class="stat-delta down">High Risk · Review khusus wajib</div></div>
+    </div>
+    <div class="card">
+      <div class="section-title" style="font-size:15px;margin-bottom:16px">Antrian Keputusan</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Program</th><th>K/L</th><th>Anggaran</th>
+            <th>Benefit</th><th>Efisiensi</th><th>SDGs</th>
+            <th>Risiko</th><th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Digitalisasi Layanan Desa<div style="font-size:11px;font-family:var(--font-mono);color:var(--muted)">POL-2025-0041</div></td>
+            <td style="font-size:12px">Kemendesa</td>
+            <td style="font-family:var(--font-mono);font-size:12px;color:var(--cyan)">Rp 4,2 T</td>
+            <td><span style="color:var(--green);font-weight:700">82</span></td>
+            <td><span style="color:var(--green);font-weight:700">79</span></td>
+            <td><span style="color:var(--green);font-weight:700">75</span></td>
+            <td><span class="tag tag-green">🟢 Rendah</span></td>
+            <td><button class="btn btn-primary" style="padding:5px 12px;font-size:11px" onclick="showToast('✅ Kebijakan disetujui & dicatat di Ledger')">Setujui</button></td>
+          </tr>
+          <tr>
+            <td>Beasiswa Vokasi Nasional<div style="font-size:11px;font-family:var(--font-mono);color:var(--muted)">POL-2025-0044</div></td>
+            <td style="font-size:12px">Kemendikbud</td>
+            <td style="font-family:var(--font-mono);font-size:12px;color:var(--cyan)">Rp 3,1 T</td>
+            <td><span style="color:var(--green);font-weight:700">82</span></td>
+            <td><span style="color:var(--cyan);font-weight:700">78</span></td>
+            <td><span style="color:var(--amber);font-weight:700">80</span></td>
+            <td><span class="tag tag-amber">🟡 Sedang</span></td>
+            <td><button class="btn btn-ghost" style="padding:5px 12px;font-size:11px;border-color:var(--amber);color:var(--amber)" onclick="showToast('📝 Catatan revisi dikirim ke K/L')">Revisi</button></td>
+          </tr>
+          <tr>
+            <td>Jaminan Gizi Balita<div style="font-size:11px;font-family:var(--font-mono);color:var(--muted)">POL-2025-0042</div></td>
+            <td style="font-size:12px">Kemenkes</td>
+            <td style="font-family:var(--font-mono);font-size:12px;color:var(--cyan)">Rp 2,8 T</td>
+            <td><span style="color:var(--cyan);font-weight:700">71</span></td>
+            <td><span style="color:var(--amber);font-weight:700">63</span></td>
+            <td><span style="color:var(--green);font-weight:700">77</span></td>
+            <td><span class="tag tag-amber">🟡 Sedang</span></td>
+            <td><button class="btn btn-ghost" style="padding:5px 12px;font-size:11px;border-color:var(--amber);color:var(--amber)" onclick="showToast('📝 Catatan revisi dikirim ke K/L')">Revisi</button></td>
+          </tr>
+          <tr>
+            <td>Infrastruktur Energi Hijau<div style="font-size:11px;font-family:var(--font-mono);color:var(--muted)">POL-2025-0043</div></td>
+            <td style="font-size:12px">ESDM</td>
+            <td style="font-family:var(--font-mono);font-size:12px;color:var(--amber)">Rp 12,5 T</td>
+            <td><span style="color:var(--amber);font-weight:700">51</span></td>
+            <td><span style="color:var(--red);font-weight:700">38</span></td>
+            <td><span style="color:var(--amber);font-weight:700">62</span></td>
+            <td><span class="tag tag-red">🔴 Tinggi</span></td>
+            <td><button class="btn btn-ghost" style="padding:5px 12px;font-size:11px;border-color:var(--red);color:var(--red)" onclick="showPage('review')">Review Khusus</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PAGE: SPECIAL REVIEW              -->
+  <!-- ══════════════════════════════════ -->
+  <div class="page" id="page-review">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Special Review Center</div>
+        <div class="section-sub">Aktif otomatis untuk kebijakan High Risk 🔴</div>
+      </div>
+      <span class="tag tag-red">2 Kebijakan Pending</span>
+    </div>
+    <div class="alert warn">
+      <span class="alert-icon">⚠</span>
+      <div><strong>Infrastruktur Energi Hijau (ESDM)</strong> telah memicu Special Review. Skor Simulasi: 41/100. Risiko fiskal dan implementasi dinilai tinggi oleh AI engine.</div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-title" style="font-size:15px;margin-bottom:16px">Tahapan Review Khusus</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:32px;height:32px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--navy);flex-shrink:0">✓</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--white)">Kajian Ulang oleh Ahli</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">Tim ahli ekonomi energi Bappenas telah menyelesaikan kajian. Ditemukan potensi cost overrun 40% pada skema EPC.</div>
+              <div style="margin-top:6px"><span class="tag tag-green">Selesai — 3 Jan 2025</span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:32px;height:32px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--navy);flex-shrink:0">✓</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--white)">Audit Independen BPKP</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">BPKP menemukan 3 kelemahan prosedur pengadaan dan merekomendasikan revisi struktur kontrak.</div>
+              <div style="margin-top:6px"><span class="tag tag-green">Selesai — 8 Jan 2025</span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start">
+            <div style="width:32px;height:32px;background:var(--amber);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--navy);flex-shrink:0">3</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--white)">Konsultasi Publik</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">1.240 komentar masuk via portal publik. 62% mendukung dengan syarat ada jaminan manfaat lokal.</div>
+              <div style="margin-top:6px"><span class="tag tag-amber">Berlangsung — 15 Jan 2025</span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;opacity:0.5">
+            <div style="width:32px;height:32px;background:var(--slate-md);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted);flex-shrink:0">4</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--muted-lt)">Sidang Khusus Pengambilan Keputusan</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">Menunggu selesai konsultasi publik.</div>
+              <div style="margin-top:6px"><span class="tag" style="background:var(--slate-md);color:var(--muted)">Menunggu</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title" style="font-size:15px;margin-bottom:14px">Override Justification</div>
+        <div class="alert warn">
+          <span class="alert-icon">⚠</span>
+          <div>Kebijakan ini berpotensi tetap disetujui meski High Risk. Setiap keputusan override <strong>wajib dicatat di Policy Accountability Ledger</strong> disertai justifikasi tertulis dari pejabat berwenang.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Alasan Override (Wajib)</label>
+          <textarea class="form-textarea" placeholder="Tuliskan justifikasi mengapa kebijakan High Risk ini tetap perlu disetujui...">Proyek ini memenuhi target bauran energi terbarukan 23% dalam RPJMN. Meski risiko implementasi tinggi, penundaan akan berdampak pada komitmen NDC Indonesia.</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pejabat yang Bertanggung Jawab</label>
+          <input class="form-input" value="Dirjen EBTKE — ESDM">
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="showPage('ledger');showToast('📓 Keputusan dicatat di Accountability Ledger')">Override & Catat di Ledger</button>
+          <button class="btn btn-ghost" style="flex:1;justify-content:center;border-color:var(--red);color:var(--red)" onclick="showToast('❌ Kebijakan ditolak')">Tolak</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PAGE: ACCOUNTABILITY LEDGER       -->
+  <!-- ══════════════════════════════════ -->
+  <div class="page" id="page-ledger">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Policy Accountability Ledger</div>
+        <div class="section-sub">Rekam jejak seluruh keputusan kebijakan — tidak dapat diubah</div>
+      </div>
+      <span class="tag tag-cyan">Blockchain-ready</span>
+    </div>
+    <div class="alert info" style="margin-bottom:20px">
+      <span class="alert-icon">🔒</span>
+      <div><strong>Immutable Record</strong> — Setiap keputusan yang tercatat tidak dapat dihapus. Sistem ini memastikan <em>akuntabilitas penuh</em> termasuk ketika kebijakan high-risk tetap disetujui dengan justifikasi override.</div>
+    </div>
+    <div class="card">
+      <div class="ledger-row header">
+        <div>Nama Kebijakan</div>
+        <div>Pejabat</div>
+        <div>Skor</div>
+        <div>Override</div>
+        <div>Tanggal</div>
+      </div>
+      <div class="ledger-row">
+        <div>
+          <div class="ledger-policy-name">Digitalisasi Layanan Desa</div>
+          <div class="ledger-policy-id">POL-2025-0041 · Kemendesa</div>
+        </div>
+        <div style="font-size:12.5px;color:var(--muted-lt)">Dirjen PDP<br><span style="font-size:11px;color:var(--muted)">Kemendesa</span></div>
+        <div><span style="color:var(--green);font-family:var(--font-disp);font-size:18px;font-weight:700">82</span> <span class="tag tag-green" style="margin-left:4px">Disetujui</span></div>
+        <div><span class="override-flag no">✓ Tidak</span></div>
+        <div style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">02 Jan 2025</div>
+      </div>
+      <div class="ledger-row">
+        <div>
+          <div class="ledger-policy-name">Infrastruktur Energi Hijau</div>
+          <div class="ledger-policy-id">POL-2025-0043 · ESDM</div>
+        </div>
+        <div style="font-size:12.5px;color:var(--muted-lt)">Dirjen EBTKE<br><span style="font-size:11px;color:var(--muted)">ESDM</span></div>
+        <div><span style="color:var(--red);font-family:var(--font-disp);font-size:18px;font-weight:700">41</span> <span class="tag tag-amber" style="margin-left:4px">Override</span></div>
+        <div><span class="override-flag yes">⚠ Ya — Alasan Dicatat</span></div>
+        <div style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">15 Jan 2025</div>
+      </div>
+      <div class="ledger-row">
+        <div>
+          <div class="ledger-policy-name">Beasiswa Vokasi Nasional</div>
+          <div class="ledger-policy-id">POL-2025-0044 · Kemendikbud</div>
+        </div>
+        <div style="font-size:12.5px;color:var(--muted-lt)">Dirjen Vokasi<br><span style="font-size:11px;color:var(--muted)">Kemendikbud</span></div>
+        <div><span style="color:var(--cyan);font-family:var(--font-disp);font-size:18px;font-weight:700">74</span> <span class="tag tag-amber" style="margin-left:4px">Revisi</span></div>
+        <div><span class="override-flag no">✓ Tidak</span></div>
+        <div style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">17 Jan 2025</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="card">
+      <div class="section-title" style="font-size:15px;margin-bottom:14px">Performance Contract — Digitalisasi Layanan Desa</div>
+      <div class="grid-3">
+        <div class="card card-sm" style="background:var(--slate-md)">
+          <div class="stat-label">Target Desa Terdigitalisasi</div>
+          <div style="font-family:var(--font-disp);font-size:20px;font-weight:700;color:var(--white)">74.954</div>
+          <div class="stat-delta">Deadline: Des 2027</div>
+        </div>
+        <div class="card card-sm" style="background:var(--slate-md)">
+          <div class="stat-label">Target Pengguna Aktif</div>
+          <div style="font-family:var(--font-disp);font-size:20px;font-weight:700;color:var(--white)">50 Jt</div>
+          <div class="stat-delta">Warga terlayani digital</div>
+        </div>
+        <div class="card card-sm" style="background:var(--slate-md)">
+          <div class="stat-label">Target Efisiensi Birokrasi</div>
+          <div style="font-family:var(--font-disp);font-size:20px;font-weight:700;color:var(--white)">30%</div>
+          <div class="stat-delta">Reduksi waktu layanan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PAGE: TRANSPARENCY                -->
+  <!-- ══════════════════════════════════ -->
+  <div class="page" id="page-transparency">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Transparency Dashboard</div>
+        <div class="section-sub">Data publik kebijakan nasional — dapat diakses seluruh warga Indonesia</div>
+      </div>
+      <span class="tag tag-green">🌐 Live</span>
+    </div>
+    <div class="pub-grid">
+      <div class="tracker-item" style="flex-direction:column;align-items:flex-start">
+        <div class="tracker-icon green">📋</div>
+        <div class="tracker-name" style="margin-top:8px">Policy Tracker</div>
+        <div class="tracker-stat" style="color:var(--cyan)">247</div>
+        <div class="tracker-sub">Kebijakan aktif dapat dilacak publik</div>
+      </div>
+      <div class="tracker-item" style="flex-direction:column;align-items:flex-start">
+        <div class="tracker-icon amber">💰</div>
+        <div class="tracker-name" style="margin-top:8px">Budget Tracker</div>
+        <div class="tracker-stat" style="color:var(--amber)">Rp 3.621 T</div>
+        <div class="tracker-sub">Realisasi anggaran real-time</div>
+      </div>
+      <div class="tracker-item" style="flex-direction:column;align-items:flex-start">
+        <div class="tracker-icon green">🌱</div>
+        <div class="tracker-name" style="margin-top:8px">SDGs Tracker</div>
+        <div class="tracker-stat" style="color:var(--green)">17 Goals</div>
+        <div class="tracker-sub">Progress menuju target 2030</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-title" style="font-size:15px;margin-bottom:16px">Status Kebijakan Publik</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--slate-md);border-radius:8px">
+            <div style="font-size:13px;color:var(--white)">Digitalisasi Layanan Desa</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="font-size:12px;color:var(--muted)">Progress:</div>
+              <div style="font-size:13px;font-family:var(--font-mono);color:var(--green);font-weight:700">28%</div>
+              <span class="tag tag-green">Berjalan</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--slate-md);border-radius:8px">
+            <div style="font-size:13px;color:var(--white)">Beasiswa Vokasi Nasional</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="font-size:12px;color:var(--muted)">Progress:</div>
+              <div style="font-size:13px;font-family:var(--font-mono);color:var(--amber);font-weight:700">12%</div>
+              <span class="tag tag-amber">Revisi</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--slate-md);border-radius:8px">
+            <div style="font-size:13px;color:var(--white)">Infrastruktur Energi Hijau</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="font-size:12px;color:var(--muted)">Progress:</div>
+              <div style="font-size:13px;font-family:var(--font-mono);color:var(--red);font-weight:700">0%</div>
+              <span class="tag tag-red">Review</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title" style="font-size:15px;margin-bottom:16px">Realisasi Anggaran FY 2025</div>
+        <div style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <div style="font-size:13px;color:var(--muted-lt)">Total APBN 2025</div>
+            <div style="font-size:13px;color:var(--white);font-weight:600;font-family:var(--font-mono)">Rp 3.621,3 T</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <div style="font-size:13px;color:var(--muted-lt)">Telah Direalisasi</div>
+            <div style="font-size:13px;color:var(--cyan);font-weight:600;font-family:var(--font-mono)">Rp 1.089,4 T</div>
+          </div>
+          <div class="prog-bar" style="height:8px;margin-top:10px"><div class="prog-fill" style="width:30.1%;background:var(--cyan)"></div></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">30,1% dari total APBN · per Jan 2025</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:12.5px;color:var(--muted-lt)">Pendidikan</div>
+            <div>
+              <div class="prog-bar" style="width:120px;display:inline-block;vertical-align:middle;margin-right:8px"><div class="prog-fill" style="width:38%;background:var(--green)"></div></div>
+              <span style="font-size:12px;font-family:var(--font-mono);color:var(--green)">38%</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:12.5px;color:var(--muted-lt)">Kesehatan</div>
+            <div>
+              <div class="prog-bar" style="width:120px;display:inline-block;vertical-align:middle;margin-right:8px"><div class="prog-fill" style="width:31%;background:var(--cyan)"></div></div>
+              <span style="font-size:12px;font-family:var(--font-mono);color:var(--cyan)">31%</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:12.5px;color:var(--muted-lt)">Infrastruktur</div>
+            <div>
+              <div class="prog-bar" style="width:120px;display:inline-block;vertical-align:middle;margin-right:8px"><div class="prog-fill" style="width:22%;background:var(--amber)"></div></div>
+              <span style="font-size:12px;font-family:var(--font-mono);color:var(--amber)">22%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PAGE: KONSULTASI PUBLIK           -->
+  <!-- ══════════════════════════════════ -->
+  <div class="page" id="page-consultation">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Public Consultation Portal</div>
+        <div class="section-sub">Aspirasi dan masukan warga terhadap kebijakan publik</div>
+      </div>
+    </div>
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="stat-card"><div class="stat-label">Total Komentar Masuk</div><div class="stat-value">12.480</div><div class="stat-delta up">▲ 240 hari ini</div></div>
+      <div class="stat-card" style="--accent:var(--green)"><div class="stat-label">Sentimen Positif</div><div class="stat-value" style="color:var(--green)">64%</div><div class="stat-delta">AI Sentiment Analysis</div></div>
+      <div class="stat-card" style="--accent:var(--amber)"><div class="stat-label">Isu Utama</div><div class="stat-value sm">Distribusi</div><div class="stat-delta">Kekhawatiran pemerataan</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-title" style="font-size:15px;margin-bottom:16px">💬 Berikan Masukan Anda</div>
+        <div class="form-group">
+          <label class="form-label">Pilih Kebijakan</label>
+          <select class="form-select">
+            <option>Infrastruktur Energi Hijau — ESDM</option>
+            <option>Beasiswa Vokasi Nasional — Kemendikbud</option>
+            <option>Digitalisasi Layanan Desa — Kemendesa</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nama / Institusi (opsional)</label>
+          <input class="form-input" placeholder="Anonim jika tidak diisi">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Masukan Anda</label>
+          <textarea class="form-textarea" placeholder="Tuliskan pendapat, dukungan, atau kekhawatiran Anda tentang kebijakan ini..."></textarea>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="showToast('✅ Masukan dikirim dan akan dianalisis AI')">Kirim Masukan</button>
+      </div>
+      <div class="card">
+        <div class="section-title" style="font-size:15px;margin-bottom:16px">Masukan Terbaru</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="padding:12px;background:var(--slate-md);border-radius:8px;border-left:3px solid var(--green)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <div style="font-size:12px;font-weight:600;color:var(--white)">Koalisi Energi Terbarukan Indonesia</div>
+              <span class="tag tag-green" style="font-size:10px">Mendukung</span>
+            </div>
+            <div style="font-size:12.5px;color:var(--muted-lt)">Program ini sangat dibutuhkan untuk transisi energi. Namun skema pembiayaan perlu lebih transparan agar tidak membebani APBN jangka panjang.</div>
+          </div>
+          <div style="padding:12px;background:var(--slate-md);border-radius:8px;border-left:3px solid var(--red)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <div style="font-size:12px;font-weight:600;color:var(--white)">Warga Kab. Banggai</div>
+              <span class="tag tag-red" style="font-size:10px">Keberatan</span>
+            </div>
+            <div style="font-size:12.5px;color:var(--muted-lt)">Proyek PLTS ini direncanakan di lahan pertanian aktif. Dampak sosial terhadap 2.400 petani belum dikaji secara memadai.</div>
+          </div>
+          <div style="padding:12px;background:var(--slate-md);border-radius:8px;border-left:3px solid var(--amber)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <div style="font-size:12px;font-weight:600;color:var(--white)">Akademisi — ITB</div>
+              <span class="tag tag-amber" style="font-size:10px">Saran</span>
+            </div>
+            <div style="font-size:12.5px;color:var(--muted-lt)">Perlu kajian ESIA yang lebih komprehensif dan melibatkan universitas lokal sebagai mitra riset implementasi.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PAGE: EVALUASI                    -->
+  <!-- ══════════════════════════════════ -->
+  <div class="page" id="page-evaluation">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Policy Evaluation Engine</div>
+        <div class="section-sub">Prediksi vs Realisasi pasca implementasi</div>
+      </div>
+    </div>
+    <div class="alert info" style="margin-bottom:20px">
+      <span class="alert-icon">📊</span>
+      <div><strong>Evaluasi Pasca Implementasi</strong> — Program Digitalisasi Layanan Desa (2022–2024). Perbandingan target awal dengan realisasi lapangan untuk pembelajaran kebijakan.</div>
+    </div>
+    <div class="grid-2" style="margin-bottom:20px">
+      <div class="card">
+        <div class="section-title" style="font-size:15px;margin-bottom:16px">📈 Prediksi vs Realisasi</div>
+        <table class="pvr-table">
+          <thead>
+            <tr>
+              <th>Indikator</th>
+              <th>Prediksi AI</th>
+              <th>Realisasi</th>
+              <th>Gap</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Desa Terdigitalisasi</td>
+              <td style="text-align:center;font-family:var(--font-mono)">45.000</td>
+              <td style="text-align:center;font-family:var(--font-mono);color:var(--green);font-weight:700">47.320</td>
+              <td><span class="pvr-gap pos">+5,2%</span></td>
+            </tr>
+            <tr>
+              <td>Warga Aktif Menggunakan</td>
+              <td style="text-align:center;font-family:var(--font-mono)">12 jt</td>
+              <td style="text-align:center;font-family:var(--font-mono);color:var(--amber);font-weight:700">8,4 jt</td>
+              <td><span class="pvr-gap neg">−30%</span></td>
+            </tr>
+            <tr>
+              <td>Pengurangan Waktu Layanan</td>
+              <td style="text-align:center;font-family:var(--font-mono)">40%</td>
+              <td style="text-align:center;font-family:var(--font-mono);color:var(--green);font-weight:700">38%</td>
+              <td><span class="pvr-gap neg">−5%</span></td>
+            </tr>
+            <tr>
+              <td>Realisasi Anggaran</td>
+              <td style="text-align:center;font-family:var(--font-mono)">Rp 4,2 T</td>
+              <td style="text-align:center;font-family:var(--font-mono);color:var(--red);font-weight:700">Rp 4,8 T</td>
+              <td><span class="pvr-gap neg">+14,3%</span></td>
+            </tr>
+            <tr>
+              <td>Kepuasan Masyarakat</td>
+              <td style="text-align:center;font-family:var(--font-mono)">80%</td>
+              <td style="text-align:center;font-family:var(--font-mono);color:var(--green);font-weight:700">84%</td>
+              <td><span class="pvr-gap pos">+4%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="section-title" style="font-size:15px;margin-bottom:10px">Success Score</div>
+          <div style="display:flex;align-items:center;gap:20px">
+            <div style="text-align:center">
+              <div style="font-family:var(--font-disp);font-size:48px;font-weight:700;color:var(--amber);line-height:1">72</div>
+              <div style="font-size:12px;color:var(--muted)">dari 100</div>
+            </div>
+            <div style="flex:1;font-size:13px;color:var(--muted-lt);line-height:1.7">
+              Program berjalan di atas prediksi dalam hal jangkauan fisik, namun adopsi pengguna lebih rendah dari target. Cost overrun 14% menjadi catatan utama untuk kebijakan serupa.
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title" style="font-size:15px;margin-bottom:12px">🤖 Rekomendasi AI</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="padding:10px;background:var(--slate-md);border-radius:8px;border-left:3px solid var(--cyan)">
+              <div style="font-size:12px;font-weight:600;color:var(--cyan);margin-bottom:3px">Adopsi Pengguna</div>
+              <div style="font-size:12px;color:var(--muted-lt)">Integrasikan kampanye literasi digital lokal sejak tahap perancangan. Libatkan Kades sebagai champion adoption.</div>
+            </div>
+            <div style="padding:10px;background:var(--slate-md);border-radius:8px;border-left:3px solid var(--amber)">
+              <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:3px">Kontrol Anggaran</div>
+              <div style="font-size:12px;color:var(--muted-lt)">Terapkan spending cap triwulanan dengan trigger review otomatis jika realisasi melebihi 105% dari rencana.</div>
+            </div>
+            <div style="padding:10px;background:var(--slate-md);border-radius:8px;border-left:3px solid var(--green)">
+              <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:3px">Replikasi Positif</div>
+              <div style="font-size:12px;color:var(--muted-lt)">Model ini layak direplikasi di 80% kabupaten/kota dengan penyesuaian konteks infrastruktur internet lokal.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .main -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // Set date
+  const d = new Date();
+  document.getElementById('current-date').textContent =
+    d.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+
+  // Page navigation
+  const pageMeta = {
+    'dashboard':     ['Dashboard Utama', 'Ikhtisar Kebijakan Nasional'],
+    'data-hub':      ['National Data Hub', 'Layer 1 — Integrasi Data'],
+    'proposal':      ['Policy Proposal Hub', 'Layer 2 — Ajukan Kebijakan'],
+    'simulation':    ['AI Simulation Engine', 'Layer 2 — Evaluasi Ex-Ante'],
+    'decision':      ['Decision Center', 'Layer 3 — Pengambilan Keputusan'],
+    'review':        ['Special Review Center', 'Layer 3 — High-Risk Review'],
+    'ledger':        ['Accountability Ledger', 'Layer 3 — Rekam Jejak Keputusan'],
+    'transparency':  ['Transparency Dashboard', 'Layer 4 — Data Publik'],
+    'consultation':  ['Konsultasi Publik', 'Layer 4 — Partisipasi Warga'],
+    'evaluation':    ['Policy Evaluation Engine', 'Pasca Implementasi — Pembelajaran Kebijakan'],
+  };
+
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    const page = document.getElementById('page-' + id);
+    if (page) page.classList.add('active');
+
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick')?.includes("'" + id + "'")) n.classList.add('active');
+    });
+
+    const meta = pageMeta[id] || ['GovInsight+', ''];
+    document.getElementById('topbar-title').innerHTML =
+      meta[0] + ' <span>' + meta[1] + '</span>';
+
+    window.scrollTo(0, 0);
+  }
+
+  // Toast
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerHTML = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>
