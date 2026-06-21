@@ -1075,7 +1075,7 @@
       <div class="brand-icon">G+</div>
       <div class="brand-name">GovInsight<span>+</span></div>
     </div>
-    <div class="brand-tagline">National Policy Intelligence Platform</div>
+    <div class="brand-tagline">Platform RIA Berbasis AI</div>
   </div>
 
   <div class="nav-section">
@@ -1100,6 +1100,9 @@
     </div>
     <div class="nav-item" onclick="showPage('simulation')">
       <span class="nav-icon">⚙</span> Simulasi Kebijakan
+    </div>
+    <div class="nav-item" onclick="showPage('governance')">
+      <span class="nav-icon">🛡</span> Tata Kelola AI & Banding
     </div>
   </div>
 
@@ -1171,7 +1174,7 @@
         <div class="arch-layer l1" onclick="showPage('data-hub')">
           <div class="arch-layer-num">LAYER 01</div>
           <div class="arch-layer-name">Data Integration</div>
-          <div class="arch-layer-desc">Musrenbang, SIPD, BPS, BPK, K/L</div>
+          <div class="arch-layer-desc">Bappenas, Musrenbang, BPS, Kemenkeu, K/L Teknis</div>
         </div>
         <div class="arch-arrow">↓</div>
         <div class="arch-layer l2" onclick="showPage('simulation')">
@@ -1372,7 +1375,7 @@
       </div>
     </div>
     <div class="grid-3" style="margin-bottom:20px">
-      <div class="stat-card"><div class="stat-label">Sumber Aktif</div><div class="stat-value">10</div><div class="stat-delta up">▲ Semua tersinkronisasi</div></div>
+      <div class="stat-card"><div class="stat-label">Sumber Aktif</div><div class="stat-value">6</div><div class="stat-delta up">▲ Semua tersinkronisasi</div></div>
       <div class="stat-card" style="--accent:var(--amber)"><div class="stat-label">Total Rekaman</div><div class="stat-value sm">4,7 Jt</div><div class="stat-delta">Data kebijakan historis</div></div>
       <div class="stat-card" style="--accent:var(--green)"><div class="stat-label">Update Terakhir</div><div class="stat-value sm">5 mnt</div><div class="stat-delta up">Real-time sync</div></div>
     </div>
@@ -1408,11 +1411,20 @@
             <span class="tag tag-green">Aktif</span>
           </div>
           <div class="tracker-item">
-            <div class="tracker-icon green">🔍</div>
+            <div class="tracker-icon green">🏛</div>
             <div class="tracker-info">
-              <div class="tracker-name">BPK — Audit Keuangan</div>
-              <div class="tracker-stat" style="color:var(--green);font-size:14px">247 laporan</div>
-              <div class="tracker-sub">Audit Kinerja, LKPP, LKKL</div>
+              <div class="tracker-name">Bappenas — Data Pembangunan</div>
+              <div class="tracker-stat" style="color:var(--green);font-size:14px">RPJMN & RKP terindeks</div>
+              <div class="tracker-sub">Rencana pembangunan nasional & baseline program</div>
+            </div>
+            <span class="tag tag-green">Aktif</span>
+          </div>
+          <div class="tracker-item">
+            <div class="tracker-icon amber">🏢</div>
+            <div class="tracker-info">
+              <div class="tracker-name">Kementerian Teknis — Data Sektoral</div>
+              <div class="tracker-stat" style="color:var(--amber);font-size:14px">34 K/L terhubung</div>
+              <div class="tracker-sub">Data program & kinerja sektoral per kementerian</div>
             </div>
             <span class="tag tag-green">Aktif</span>
           </div>
@@ -1445,9 +1457,9 @@
             <div class="stat-delta">2005–2025</div>
           </div>
           <div class="card card-sm" style="background:var(--slate-md)">
-            <div class="stat-label">Perda & PP Nasional</div>
-            <div style="font-family:var(--font-disp);font-size:22px;font-weight:700;color:var(--white)">47.000+</div>
-            <div class="stat-delta">Prolegnas termasuk</div>
+            <div class="stat-label">Regulasi Aktif Nasional</div>
+            <div style="font-family:var(--font-disp);font-size:22px;font-weight:700;color:var(--white)">67.000+</div>
+            <div class="stat-delta">+3.000 regulasi baru/tahun</div>
           </div>
           <div class="card card-sm" style="background:var(--slate-md)">
             <div class="stat-label">SDGs Indikator</div>
@@ -1474,7 +1486,7 @@
         <div class="section-title" style="margin-bottom:18px;font-size:15px">📋 Policy Canvas — Template Standar</div>
         <div class="form-group">
           <label class="form-label">Nama Program</label>
-          <input class="form-input" type="text" placeholder="Cth: Program Digitalisasi UMKM Nasional" value="Program Beasiswa Vokasi 2026">
+          <input class="form-input" type="text" placeholder="Cth: Program Digitalisasi UMKM Nasional" value="Beasiswa Vokasi Nasional">
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -1503,6 +1515,10 @@
         <div class="form-group">
           <label class="form-label">Target Group</label>
           <input class="form-input" value="Pemuda usia 18–25, lulusan SMP/SMA sederajat, keluarga tidak mampu (desil 1–3)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Durasi Implementasi</label>
+          <input class="form-input" value="3 tahun (2026–2028)">
         </div>
         <div class="form-group">
           <label class="form-label">KPI Utama</label>
@@ -1540,14 +1556,15 @@
         <div class="card">
           <div class="section-title" style="font-size:15px;margin-bottom:10px">Panduan Policy Canvas</div>
           <div style="font-size:12.5px;color:var(--muted-lt);line-height:1.7">
-            Setiap proposal wajib memuat <strong style="color:var(--white)">6 komponen</strong> utama:<br><br>
-            <span style="color:var(--cyan)">①</span> Problem Statement — masalah yang ingin diselesaikan<br>
-            <span style="color:var(--cyan)">②</span> Objective — tujuan terukur<br>
-            <span style="color:var(--cyan)">③</span> Target Group — penerima manfaat spesifik<br>
-            <span style="color:var(--cyan)">④</span> Budget — kebutuhan anggaran terinci<br>
-            <span style="color:var(--cyan)">⑤</span> KPI — indikator keberhasilan<br>
-            <span style="color:var(--cyan)">⑥</span> Timeline — estimasi pelaksanaan<br><br>
-            <span style="color:var(--muted)">Proposal yang tidak lengkap tidak dapat masuk ke tahap simulasi AI.</span>
+            Setiap proposal wajib memuat <strong style="color:var(--white)">7 komponen</strong> minimum agar dapat dievaluasi AI Simulation Engine:<br><br>
+            <span style="color:var(--cyan)">①</span> Nama Kebijakan<br>
+            <span style="color:var(--cyan)">②</span> Kementerian/Lembaga Penanggung Jawab<br>
+            <span style="color:var(--cyan)">③</span> Estimasi Anggaran<br>
+            <span style="color:var(--cyan)">④</span> Tujuan Kebijakan (Objective)<br>
+            <span style="color:var(--cyan)">⑤</span> Target Penerima Manfaat<br>
+            <span style="color:var(--cyan)">⑥</span> Durasi Implementasi<br>
+            <span style="color:var(--cyan)">⑦</span> Konteks Masalah (Problem Statement)<br><br>
+            <span style="color:var(--muted)">Proposal yang tidak lengkap tidak dapat dilanjutkan ke tahap simulasi AI.</span>
           </div>
         </div>
       </div>
@@ -1561,7 +1578,7 @@
     <div class="section-header">
       <div>
         <div class="section-title">AI Policy Simulation Engine</div>
-        <div class="section-sub">Simulasi ex-ante kebijakan — Program Beasiswa Vokasi 2026</div>
+        <div class="section-sub">Simulasi ex-ante kebijakan — Beasiswa Vokasi Nasional</div>
       </div>
       <span class="tag tag-cyan">🤖 Analisis Selesai</span>
     </div>
@@ -1622,7 +1639,7 @@
           <div class="section-title" style="font-size:15px;margin-bottom:4px">Opportunity Cost Analyzer</div>
           <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">Dengan anggaran yang sama (Rp 3,1 Triliun), pemerintah dapat membangun:</div>
           <div class="opp-display">
-            <div class="opp-budget">Rp 3,1 T <span>— Dana Program Beasiswa Vokasi</span></div>
+            <div class="opp-budget">Rp 3,1 T <span>— Dana Beasiswa Vokasi Nasional</span></div>
             <div class="opp-alternatives">
               <div class="opp-alt">
                 <div class="opp-alt-icon">🏫</div>
@@ -1660,7 +1677,7 @@
             <div class="risk-val" style="color:var(--green)">18%</div>
           </div>
           <div class="risk-row">
-            <div class="risk-label">Risiko Politik</div>
+            <div class="risk-label">Risiko Kebijakan</div>
             <div class="risk-bar-wrap"><div class="risk-bar" style="width:35%;background:var(--amber)"></div></div>
             <div class="risk-val" style="color:var(--amber)">35%</div>
           </div>
@@ -1679,6 +1696,7 @@
           <div style="text-align:center;padding:16px 0">
             <div style="font-family:var(--font-disp);font-size:52px;font-weight:700;color:var(--green);line-height:1">74</div>
             <div style="font-size:13px;color:var(--muted);margin-top:4px">Composite Policy Score</div>
+            <div style="margin-top:10px"><span class="tag tag-amber">🟡 Perlu Revisi dengan Catatan Spesifik</span></div>
           </div>
           <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
             <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="showPage('decision');showToast('✅ Dikirim ke Decision Center')">Kirim ke Decision Center</button>
@@ -1690,9 +1708,97 @@
   </div>
 
   <!-- ══════════════════════════════════ -->
-  <!-- PAGE: DECISION CENTER             -->
+  <!-- PAGE: AI GOVERNANCE & BANDING     -->
   <!-- ══════════════════════════════════ -->
-  <div class="page" id="page-decision">
+  <div class="page" id="page-governance">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Tata Kelola AI & Mekanisme Banding</div>
+        <div class="section-sub">Validasi model independen, audit bias tahunan, dan banding atas hasil evaluasi AI</div>
+      </div>
+    </div>
+
+    <div class="alert info" style="margin-bottom:20px">
+      <span class="alert-icon">🛡</span>
+      <div>GovInsight+ tidak memosisikan AI sebagai otoritas tunggal. Setiap rekomendasi tetap tunduk pada validasi independen, audit bias berkala, dan hak kementerian untuk mengajukan keberatan.</div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:20px">
+      <div class="stat-card" style="--accent:var(--green)"><div class="stat-label">Validasi Model Terakhir</div><div class="stat-value sm">12 Des 2024</div><div class="stat-delta up">Tim independen Bappenas</div></div>
+      <div class="stat-card" style="--accent:var(--cyan)"><div class="stat-label">Audit Bias Tahunan</div><div class="stat-value sm">Tidak Ditemukan Bias</div><div class="stat-delta">Siklus 2024 · Selesai</div></div>
+      <div class="stat-card" style="--accent:var(--amber)"><div class="stat-label">Banding Diajukan</div><div class="stat-value">4</div><div class="stat-delta">Bulan ini · 1 menunggu putusan</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="section-title" style="font-size:15px;margin-bottom:14px">Validasi Model & Audit Bias</div>
+        <div style="font-size:12.5px;color:var(--muted-lt);line-height:1.7;margin-bottom:14px">
+          Model AI dibangun di atas data historis kebijakan Indonesia yang dikurasi dan divalidasi oleh <strong style="color:var(--white)">tim independen</strong> berisi ahli kebijakan publik, statistisi, dan pakar etika AI yang ditunjuk Bappenas.
+        </div>
+        <div class="alert warn">
+          <span class="alert-icon">⚠</span>
+          <div><strong>Audit bias algoritmik tahunan</strong> dilakukan untuk mendeteksi potensi diskriminasi sistematis terhadap kebijakan yang berpihak pada daerah terpencil atau sektor yang kurang terwakili dalam data historis. Hasil audit dipublikasikan penuh melalui Transparency Dashboard.</div>
+        </div>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:14px" onclick="showPage('transparency');showToast('📊 Membuka hasil audit di Transparency Dashboard')">Lihat Hasil Audit di Transparency Dashboard</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title" style="font-size:15px;margin-bottom:14px">Ajukan Keberatan (Banding)</div>
+        <div style="font-size:12.5px;color:var(--muted-lt);margin-bottom:14px">Kementerian yang tidak setuju dengan hasil evaluasi AI dapat mengajukan keberatan tertulis disertai data dan argumen tambahan kepada Panel Evaluasi Independen.</div>
+        <div class="form-group">
+          <label class="form-label">Proposal yang Dibanding</label>
+          <select class="form-select">
+            <option>Infrastruktur Energi Hijau — ESDM (POL-2025-0043)</option>
+            <option>Jaminan Gizi Balita — Kemenkes (POL-2025-0042)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Keberatan & Data Tambahan</label>
+          <textarea class="form-textarea" placeholder="Jelaskan keberatan beserta data atau argumen pendukung..."></textarea>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="showToast('📨 Keberatan dikirim ke Panel Evaluasi Independen')">Kirim ke Panel Evaluasi Independen</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="section-title" style="font-size:15px;margin-bottom:4px">Riwayat Banding ke Panel Evaluasi Independen</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Panel beranggotakan perwakilan Bappenas, akademisi, dan praktisi kebijakan. Hasil tinjauan bersifat mengikat dan tercatat di Accountability Ledger.</div>
+      <table>
+        <thead>
+          <tr><th>Program</th><th>K/L Pengaju</th><th>Tanggal Diajukan</th><th>Status</th><th>Putusan Panel</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Jaminan Gizi Balita</td>
+            <td style="font-size:12px">Kemenkes</td>
+            <td style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">10 Jan 2025</td>
+            <td><span class="tag tag-amber">🟡 Ditinjau Panel</span></td>
+            <td style="font-size:12px;color:var(--muted)">Menunggu putusan</td>
+          </tr>
+          <tr>
+            <td>Subsidi Pupuk Tepat Sasaran</td>
+            <td style="font-size:12px">Kementan</td>
+            <td style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">22 Des 2024</td>
+            <td><span class="tag tag-green">✓ Selesai</span></td>
+            <td style="font-size:12px;color:var(--green)">Skor direvisi, disetujui</td>
+          </tr>
+          <tr>
+            <td>Relokasi Pasar Tradisional</td>
+            <td style="font-size:12px">Kemendag</td>
+            <td style="font-size:12px;font-family:var(--font-mono);color:var(--muted)">05 Des 2024</td>
+            <td><span class="tag tag-green">✓ Selesai</span></td>
+            <td style="font-size:12px;color:var(--muted-lt)">Skor awal AI dipertahankan</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!-- PAGE: DECISION CENTER             -->
+  <!-- ══════════════════════════════════ -->  <div class="page" id="page-decision">
     <div class="section-header">
       <div>
         <div class="section-title">Decision Center</div>
@@ -2190,6 +2296,7 @@
     'data-hub':      ['National Data Hub', 'Layer 1 — Integrasi Data'],
     'proposal':      ['Policy Proposal Hub', 'Layer 2 — Ajukan Kebijakan'],
     'simulation':    ['AI Simulation Engine', 'Layer 2 — Evaluasi Ex-Ante'],
+    'governance':    ['Tata Kelola AI & Banding', 'Layer 2 — Validasi Model & Mekanisme Banding'],
     'decision':      ['Decision Center', 'Layer 3 — Pengambilan Keputusan'],
     'review':        ['Special Review Center', 'Layer 3 — High-Risk Review'],
     'ledger':        ['Accountability Ledger', 'Layer 3 — Rekam Jejak Keputusan'],
